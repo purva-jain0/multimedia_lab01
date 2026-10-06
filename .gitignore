@@ -1,0 +1,51 @@
+# Environment Variables & Secrets
+.env
+*.env
+.env.local
+.env.*.local
+backend/.env
+capstone_project/voice_cloning/backend/.env
+
+# Node dependencies
+node_modules/
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python cache & compiled files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Audio storage and generated media
+storage/uploads/*
+storage/outputs/*
+!storage/uploads/.gitkeep
+!storage/outputs/.gitkeep
+backend/storage/uploads/*
+backend/storage/outputs/*
+!backend/storage/uploads/.gitkeep
+!backend/storage/outputs/.gitkeep
+capstone_project/voice_cloning/backend/storage/uploads/*
+capstone_project/voice_cloning/backend/storage/outputs/*
+!capstone_project/voice_cloning/backend/storage/uploads/.gitkeep
+!capstone_project/voice_cloning/backend/storage/outputs/.gitkeep
+
+# Build artifacts
+.vite-temp/
+**/.vite-temp/
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

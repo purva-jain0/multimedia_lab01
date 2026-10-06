@@ -1,0 +1,23 @@
+# Environment Variables & Secrets
+.env
+*.env
+backend/.env
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+# Python cache & temporary files
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Audio storage and uploads
+backend/storage/uploads/*
+backend/storage/outputs/*
+!backend/storage/uploads/.gitkeep
+!backend/storage/outputs/.gitkeep
+
+# Build artifacts
+.vite-temp/
+**/.vite-temp/
