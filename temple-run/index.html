@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Jungle Dash: Lost Temple - A 2D pseudo-3D endless runner game built with HTML5 Canvas, Web Audio API, and Vanilla JavaScript for MCA Multimedia Systems Lab.">
+    <meta name="theme-color" content="#102219">
+    <title>Jungle Dash: Lost Temple - 2D Endless Runner</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏛️</text></svg>">
+</head>
+<body>
+    <div id="game-container" class="game-container">
+        <!-- 2D Canvas for Pseudo-3D Perspective Rendering -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- GAMEPLAY HUD SCREEN -->
+        <div id="screen-hud" class="overlay-screen hud-overlay hidden">
+            <header class="hud-top-bar">
+                <div class="hud-metric hud-score-box">
+                    <span class="hud-label">SCORE</span>
+                    <span id="hud-score" class="hud-value">0</span>
+                </div>
+                <div class="hud-metric hud-coins-box">
+                    <span class="coin-glyph">🪙</span>
+                    <span id="hud-coins" class="hud-value">0</span>
+                </div>
+                <div class="hud-metric hud-speed-box">
+                    <span class="hud-label">SPEED</span>
+                    <span id="hud-speed" class="hud-value">34 km/h</span>
+                </div>
+                <div class="hud-controls-group">
+                    <button id="btn-sound-hud" class="btn-icon" aria-label="Toggle Sound" title="Toggle Sound">🔊</button>
+                    <button id="btn-hud-pause" class="btn-icon" aria-label="Pause Game" title="Pause Game">⏸</button>
+                </div>
+            </header>
+
+            <!-- Touch Controls Overlay for Mobile / Tablet Devices -->
+            <div id="mobile-touch-controls" class="touch-controls-container">
+                <div class="touch-cluster left-cluster">
+                    <button id="btn-touch-left" class="btn-touch" aria-label="Move Left">
+                        <span>◀</span>
+                    </button>
+                    <button id="btn-touch-right" class="btn-touch" aria-label="Move Right">
+                        <span>▶</span>
+                    </button>
+                </div>
+                <div class="touch-cluster right-cluster">
+                    <button id="btn-touch-jump" class="btn-touch action-jump" aria-label="Jump">
+                        <span>▲</span>
+                        <span class="touch-label">JUMP</span>
+                    </button>
+                    <button id="btn-touch-slide" class="btn-touch action-slide" aria-label="Slide">
+                        <span>▼</span>
+                        <span class="touch-label">SLIDE</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN MENU SCREEN -->
+        <div id="screen-menu" class="overlay-screen menu-screen">
+            <div class="menu-card">
+                <div class="title-badge">MCA MULTIMEDIA SYSTEMS LAB</div>
+                <h1 class="game-title">
+                    <span class="title-accent">JUNGLE DASH</span>
+                    <span class="title-sub">LOST TEMPLE</span>
+                </h1>
+
+                <div class="best-score-badge">
+                    <span class="badge-icon">🏆</span>
+                    <span class="badge-label">HIGH SCORE:</span>
+                    <span id="menu-best-score" class="badge-value">0</span>
+                </div>
+
+                <div class="menu-actions">
+                    <button id="btn-start-game" class="btn-primary pulse-btn">
+                        <span class="btn-icon-symbol">▶</span>
+                        <span>START RUN</span>
+                    </button>
+                    <button id="btn-how-to-play" class="btn-secondary">
+                        <span>HOW TO PLAY</span>
+                    </button>
+                    <button id="btn-sound-menu" class="btn-secondary">
+                        <span>🔊 Mute</span>
+                    </button>
+                </div>
+
+                <div class="controls-guide-strip">
+                    <div class="guide-item">
+                        <kbd>←</kbd> <kbd>→</kbd> Lane
+                    </div>
+                    <div class="guide-item">
+                        <kbd>↑</kbd> Jump
+                    </div>
+                    <div class="guide-item">
+                        <kbd>↓</kbd> Slide
+                    </div>
+                    <div class="guide-item">
+                        <kbd>P</kbd> Pause
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAUSE MODAL SCREEN -->
+        <div id="screen-pause" class="overlay-screen modal-screen hidden">
+            <div class="modal-card">
+                <h2 class="modal-title">RUN PAUSED</h2>
+                <div class="modal-divider"></div>
+                <div class="modal-actions">
+                    <button id="btn-resume" class="btn-primary">
+                        <span>▶ RESUME</span>
+                    </button>
+                    <button id="btn-pause-restart" class="btn-secondary">
+                        <span>🔄 RESTART RUN</span>
+                    </button>
+                    <button id="btn-pause-menu" class="btn-secondary">
+                        <span>🏛 MAIN MENU</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME OVER SCREEN -->
+        <div id="screen-gameover" class="overlay-screen modal-screen hidden">
+            <div class="modal-card gameover-card">
+                <div id="go-new-high-badge" class="new-high-ribbon hidden">★ NEW HIGH SCORE! ★</div>
+                <h2 class="modal-title gameover-title">TEMPLE RUN ENDED</h2>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-label">FINAL SCORE</span>
+                        <span id="go-final-score" class="stat-val highlight">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">COINS COLLECTED</span>
+                        <span id="go-final-coins" class="stat-val gold">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">BEST RECORD</span>
+                        <span id="go-best-score" class="stat-val">0</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="btn-restart-game" class="btn-primary pulse-btn">
+                        <span>🔄 RUN AGAIN</span>
+                    </button>
+                    <button id="btn-menu-from-gameover" class="btn-secondary">
+                        <span>🏛 MAIN MENU</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOW TO PLAY SCREEN -->
+        <div id="screen-howtoplay" class="overlay-screen modal-screen hidden">
+            <div class="modal-card howtoplay-card">
+                <h2 class="modal-title">HOW TO PLAY</h2>
+                <div class="modal-divider"></div>
+
+                <div class="howtoplay-content">
+                    <div class="guide-section">
+                        <h3>🎮 Controls</h3>
+                        <div class="controls-columns">
+                            <div class="control-col">
+                                <h4>Desktop / Laptop</h4>
+                                <ul>
+                                    <li><strong>Lane Left:</strong> <kbd>←</kbd> or <kbd>A</kbd></li>
+                                    <li><strong>Lane Right:</strong> <kbd>→</kbd> or <kbd>D</kbd></li>
+                                    <li><strong>Jump:</strong> <kbd>↑</kbd>, <kbd>W</kbd>, or <kbd>Space</kbd></li>
+                                    <li><strong>Slide:</strong> <kbd>↓</kbd> or <kbd>S</kbd></li>
+                                    <li><strong>Pause:</strong> <kbd>P</kbd> or <kbd>Esc</kbd></li>
+                                </ul>
+                            </div>
+                            <div class="control-col">
+                                <h4>Mobile / Tablet</h4>
+                                <ul>
+                                    <li><strong>Swipe Left / Right:</strong> Switch Lanes</li>
+                                    <li><strong>Swipe Up:</strong> Jump Over Obstacles</li>
+                                    <li><strong>Swipe Down:</strong> Slide Under Obstacles</li>
+                                    <li><strong>On-Screen Touch Buttons:</strong> Ergonomic thumb D-pad & action triggers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="guide-section">
+                        <h3>⚠️ Temple Hazards & Survival</h3>
+                        <div class="hazards-grid">
+                            <div class="hazard-item">
+                                <span class="hazard-glyph">🪵</span>
+                                <div>
+                                    <strong>Low Spiked Barrier:</strong>
+                                    <p>Press <kbd>Jump</kbd> (Swipe Up) to leap over.</p>
+                                </div>
+                            </div>
+                            <div class="hazard-item">
+                                <span class="hazard-glyph">🏛️</span>
+                                <div>
+                                    <strong>Overhead Stone Lintel:</strong>
+                                    <p>Press <kbd>Slide</kbd> (Swipe Down) to duck underneath.</p>
+                                </div>
+                            </div>
+                            <div class="hazard-item">
+                                <span class="hazard-glyph">🗿</span>
+                                <div>
+                                    <strong>Ancient Stone Totem:</strong>
+                                    <p>Change lanes to avoid fatal impact.</p>
+                                </div>
+                            </div>
+                            <div class="hazard-item">
+                                <span class="hazard-glyph">🕳️</span>
+                                <div>
+                                    <strong>Crumbling Road Pit:</strong>
+                                    <p>Jump across or switch to a solid lane.</p>
+                                </div>
+                            </div>
+                            <div class="hazard-item">
+                                <span class="hazard-glyph">🪙</span>
+                                <div>
+                                    <strong>Gold Coins:</strong>
+                                    <p>Collect to boost your score (+10 pts each)!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="btn-close-howtoplay" class="btn-primary">
+                        <span>GOT IT, LET'S PLAY!</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Module -->
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

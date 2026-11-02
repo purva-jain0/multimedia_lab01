@@ -1,0 +1,21 @@
+{
+  "name": "jungle-dash-lost-temple",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "2D Endless Runner Game built with HTML5 Canvas, Vanilla JS, and Web Audio API for MCA Multimedia Systems Lab",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "serve": "npx serve ."
+  },
+  "keywords": [
+    "html5-canvas",
+    "web-audio-api",
+    "endless-runner",
+    "multimedia-systems",
+    "game-development",
+    "vanilla-js"
+  ],
+  "author": "Purva Jain",
+  "license": "MIT"
+}
