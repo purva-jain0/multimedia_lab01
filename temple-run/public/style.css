@@ -1,0 +1,758 @@
+/* ==========================================================================
+   Jungle Dash: Lost Temple - Styling & Responsive Layout
+   MCA Multimedia Systems Lab - CSS3 Grid/Flex, Animations & Safe-Area Insets
+   ========================================================================== */
+
+/* 1. Global Reset & Theme Variables */
+:root {
+    --color-bg-dark: #0a140e;
+    --color-jungle-deep: #102219;
+    --color-jungle-moss: #1b3826;
+    --color-stone-dark: #26211a;
+    --color-stone-mid: #3d352b;
+    --color-stone-light: #5e5344;
+    --color-gold-bright: #ffd166;
+    --color-gold-dark: #c99324;
+    --color-amber-glow: #f4a261;
+    --color-danger-red: #e76f51;
+    --color-text-light: #f8f9fa;
+    --color-text-dim: #c5c9c7;
+
+    --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --shadow-deep: 0 12px 36px rgba(0, 0, 0, 0.65);
+    --shadow-gold: 0 0 20px rgba(255, 209, 102, 0.35);
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background-color: var(--color-bg-dark);
+    font-family: var(--font-main);
+    color: var(--color-text-light);
+    touch-action: none; /* Prevents mobile scroll, swipe-navigation, and zoom */
+}
+
+/* 2. Main Game Shell & Viewport */
+.game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #152b1f 0%, #08100b 100%);
+}
+
+#game-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: default;
+}
+
+/* 3. Screen Overlay Framework */
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.overlay-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Modal Blur Backdrops */
+.modal-screen {
+    background: rgba(8, 14, 10, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 16px;
+}
+
+.modal-card {
+    background: linear-gradient(145deg, #24201a, #16130f);
+    border: 2px solid var(--color-gold-dark);
+    box-shadow: var(--shadow-deep), 0 0 24px rgba(201, 147, 36, 0.2);
+    border-radius: var(--radius-lg);
+    padding: 24px 18px;
+    width: min(440px, calc(100vw - 24px));
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--color-gold-bright);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    margin-bottom: 12px;
+}
+
+.modal-divider {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--color-gold-bright), transparent);
+    margin-bottom: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+/* 4. Main Menu Screen */
+.menu-screen {
+    background: radial-gradient(circle at center, rgba(16, 34, 25, 0.6) 0%, rgba(8, 16, 11, 0.85) 100%);
+    padding: 12px;
+}
+
+.menu-card {
+    background: linear-gradient(160deg, rgba(38, 33, 26, 0.92) 0%, rgba(18, 15, 12, 0.96) 100%);
+    border: 2px solid var(--color-gold-dark);
+    box-shadow: var(--shadow-deep), var(--shadow-gold);
+    border-radius: var(--radius-lg);
+    padding: 24px 16px;
+    width: min(440px, calc(100vw - 24px));
+    box-sizing: border-box;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.title-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(201, 147, 36, 0.2);
+    border: 1px solid var(--color-gold-dark);
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--color-gold-bright);
+    margin-bottom: 14px;
+}
+
+.game-title {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+}
+
+.title-accent {
+    font-size: 2.3rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    background: linear-gradient(180deg, #fff2a3 0%, #ffd166 45%, #e76f51 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.8));
+}
+
+.title-sub {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: var(--color-text-dim);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+.best-score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 209, 102, 0.3);
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 22px;
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+}
+
+.badge-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--color-text-dim);
+}
+
+.badge-value {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--color-gold-bright);
+}
+
+.menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.controls-guide-strip {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px 12px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.75rem;
+    color: var(--color-text-dim);
+}
+
+.guide-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+kbd {
+    display: inline-block;
+    padding: 3px 6px;
+    background: #1c1813;
+    border: 1px solid #4a3e2e;
+    border-radius: 4px;
+    box-shadow: 0 2px 0 #0f0c08;
+    color: #ffd166;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* 5. Buttons Styling */
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(180deg, #ffd166 0%, #e59819 100%);
+    color: #1a1005;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 14px 24px;
+    border-radius: var(--radius-md);
+    border-bottom: 4px solid #9e6409;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255, 209, 102, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+}
+
+.pulse-btn {
+    animation: gentlePulse 2s infinite ease-in-out;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(255, 209, 102, 0.3); }
+    50% { box-shadow: 0 4px 24px rgba(255, 209, 102, 0.7); }
+}
+
+.btn-secondary {
+    background: rgba(61, 53, 43, 0.7);
+    color: var(--color-text-light);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 209, 102, 0.25);
+    border-bottom: 3px solid #231e17;
+    backdrop-filter: blur(4px);
+}
+
+.btn-secondary:hover {
+    background: rgba(85, 74, 60, 0.85);
+    border-color: var(--color-gold-bright);
+}
+
+.btn-secondary:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+}
+
+.btn-icon {
+    background: rgba(22, 19, 15, 0.75);
+    color: var(--color-gold-bright);
+    font-size: 1.25rem;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255, 209, 102, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.btn-icon:hover {
+    background: rgba(61, 53, 43, 0.9);
+    border-color: var(--color-gold-bright);
+}
+
+/* 6. Gameplay HUD Overlay */
+.hud-overlay {
+    pointer-events: none; /* Allows click-through to touch controls and canvas */
+    flex-direction: column;
+    justify-content: space-between;
+    padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+}
+
+.hud-top-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.hud-metric {
+    background: rgba(18, 15, 12, 0.82);
+    border: 1.5px solid rgba(255, 209, 102, 0.35);
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+}
+
+.hud-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--color-amber-glow);
+}
+
+.hud-value {
+    font-size: 1.15rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: #ffffff;
+}
+
+.hud-coins-box .coin-glyph {
+    font-size: 1.15rem;
+}
+
+.hud-coins-box .hud-value {
+    color: var(--color-gold-bright);
+}
+
+.hud-controls-group {
+    display: flex;
+    gap: 8px;
+}
+
+/* 7. Mobile On-Screen Touch Controls */
+.touch-controls-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: auto;
+    padding-bottom: 10px;
+}
+
+.touch-cluster {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-touch {
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background: rgba(26, 22, 17, 0.72);
+    border: 2px solid rgba(255, 209, 102, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+    color: var(--color-gold-bright);
+    font-size: 1.5rem;
+    font-weight: 900;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+    transition: transform 0.08s ease, background 0.08s ease;
+    touch-action: manipulation;
+}
+
+.btn-touch:active {
+    transform: scale(0.92);
+    background: rgba(201, 147, 36, 0.4);
+    border-color: #ffd166;
+}
+
+.touch-label {
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-top: -3px;
+    color: #ffffff;
+}
+
+.action-jump {
+    background: rgba(43, 76, 52, 0.75);
+    border-color: #52b788;
+}
+
+.action-slide {
+    background: rgba(100, 48, 28, 0.75);
+    border-color: #e76f51;
+}
+
+/* 8. Game Over Stats Card */
+.gameover-card {
+    max-width: 480px;
+}
+
+.gameover-title {
+    color: var(--color-danger-red);
+}
+
+.new-high-ribbon {
+    background: linear-gradient(90deg, #d4a373, #ffd166, #d4a373);
+    color: #211504;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+    animation: pulse 1s infinite alternate;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.stat-card {
+    background: rgba(14, 12, 9, 0.7);
+    border: 1px solid rgba(255, 209, 102, 0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--color-text-dim);
+}
+
+.stat-val {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-val.highlight {
+    color: var(--color-amber-glow);
+}
+
+.stat-val.gold {
+    color: var(--color-gold-bright);
+}
+
+/* 9. How to Play Screen Modal */
+.howtoplay-card {
+    max-width: 600px;
+    max-height: 85vh;
+    max-height: 85dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.howtoplay-content {
+    overflow-y: auto;
+    text-align: left;
+    padding-right: 6px;
+    margin-bottom: 14px;
+}
+
+.howtoplay-content::-webkit-scrollbar {
+    width: 6px;
+}
+.howtoplay-content::-webkit-scrollbar-thumb {
+    background: var(--color-gold-dark);
+    border-radius: 3px;
+}
+
+.guide-section {
+    margin-bottom: 20px;
+}
+
+.guide-section h3 {
+    font-size: 1.1rem;
+    color: var(--color-gold-bright);
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 209, 102, 0.2);
+    padding-bottom: 4px;
+}
+
+.controls-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.control-col h4 {
+    font-size: 0.85rem;
+    color: var(--color-amber-glow);
+    margin-bottom: 6px;
+}
+
+.control-col ul {
+    list-style: none;
+    font-size: 0.82rem;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hazards-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.hazard-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(14, 12, 9, 0.55);
+    border: 1px solid rgba(255, 209, 102, 0.15);
+    border-radius: var(--radius-sm);
+    padding: 10px;
+}
+
+.hazard-glyph {
+    font-size: 1.6rem;
+}
+
+.hazard-item strong {
+    font-size: 0.82rem;
+    color: var(--color-gold-bright);
+}
+
+.hazard-item p {
+    font-size: 0.75rem;
+    color: var(--color-text-dim);
+    margin-top: 2px;
+}
+
+/* 10. Responsive Breakpoints & Device Adaptations */
+
+/* Desktop & Laptop screen enhancements */
+@media (min-width: 900px) {
+    /* Hide touch HUD buttons on desktop devices where keyboard is king */
+    .touch-controls-container {
+        display: none;
+    }
+
+    .menu-card {
+        padding: 40px 32px;
+    }
+
+    .title-accent {
+        font-size: 3rem;
+    }
+
+    .title-sub {
+        font-size: 1.3rem;
+    }
+}
+
+/* Tablet screen enhancements */
+@media (max-width: 899px) and (min-width: 600px) {
+    .btn-touch {
+        width: 68px;
+        height: 68px;
+        font-size: 1.6rem;
+    }
+    .touch-label {
+        font-size: 0.65rem;
+    }
+}
+
+/* Compact Mobile devices (e.g. 360x800, 390x844, 430x932) */
+@media (max-width: 599px) {
+    .menu-screen {
+        padding: 12px;
+    }
+
+    .menu-card {
+        padding: 22px 14px;
+        width: 100%;
+    }
+
+    .game-title .title-accent {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+
+    .game-title .title-sub {
+        font-size: 0.92rem;
+        letter-spacing: 3px;
+    }
+
+    .controls-guide-strip {
+        font-size: 0.7rem;
+        gap: 4px 8px;
+    }
+
+    kbd {
+        padding: 2px 4px;
+        font-size: 0.68rem;
+    }
+
+    .hud-metric {
+        padding: 4px 8px;
+        gap: 5px;
+    }
+    .hud-label {
+        font-size: 0.55rem;
+    }
+    .hud-value {
+        font-size: 0.95rem;
+    }
+    .btn-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .btn-touch {
+        width: 56px;
+        height: 56px;
+        font-size: 1.35rem;
+    }
+
+    .controls-columns,
+    .hazards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .modal-card {
+        padding: 20px 16px;
+    }
+}
+
+/* Landscape orientation on mobile devices */
+@media (max-height: 500px) {
+    .hud-overlay {
+        padding: 6px 12px;
+    }
+
+    .menu-card {
+        padding: 16px;
+        max-width: 480px;
+    }
+
+    .game-title .title-accent {
+        font-size: 1.6rem;
+    }
+
+    .game-title .title-sub {
+        font-size: 0.85rem;
+    }
+
+    .menu-actions {
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .btn-primary, .btn-secondary {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+
+    .touch-controls-container {
+        padding-bottom: 4px;
+    }
+
+    .btn-touch {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    .howtoplay-card {
+        max-height: 94vh;
+    }
+}

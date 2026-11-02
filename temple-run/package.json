@@ -5,7 +5,7 @@
   "description": "2D Endless Runner Game built with HTML5 Canvas, Vanilla JS, and Web Audio API for MCA Multimedia Systems Lab",
   "main": "index.html",
   "scripts": {
-    "build": "npx esbuild src/main.js --bundle --outfile=bundle.js --format=iife",
+    "build": "node build.js",
     "start": "npx serve .",
     "serve": "npx serve .",
     "test": "node test-suite.js"
