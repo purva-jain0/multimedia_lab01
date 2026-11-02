@@ -10,6 +10,9 @@
     "serve": "npx serve .",
     "test": "node test-suite.js"
   },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  },
   "keywords": [
     "html5-canvas",
     "web-audio-api",
